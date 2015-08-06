@@ -1,0 +1,168 @@
+package TBV3b;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+public class Tourney {
+
+	public List<String> names = new ArrayList<String>();
+
+	public ArrayList<Bracket> rounds;
+	public int currentRoundIndex = 0;
+	
+	public void addName(String name){
+		names.add(name);
+	}	
+	
+	User first = getName();
+	public User getFirst() {
+		return first;
+	}
+
+	User second = getName();	
+	public User getSecond() {
+		return second;
+	}
+
+	User third = getName();
+	public User getThird() {
+		return third;
+	}
+
+	public Tourney() {
+		rounds = new ArrayList<Bracket>();
+	}
+
+	public ArrayList<Bracket> getRounds() {
+		return rounds;
+	}
+
+	public void run() {
+		firstRound();
+
+		rounds.get(currentRoundIndex).PrintBracketList();
+		while(rounds.get(currentRoundIndex).BracketList.size() > 1) {
+			runRound();
+		} 
+		//Tourney complete.
+	}
+
+	public void firstRound() {
+		Bracket startBracket = new Bracket();
+
+		currentRoundIndex = 0;
+		// Fill startBracket with names from Main() [from database later]
+		
+// get result from inputs servlet mainTourney object.
+		
+		//Bracket Round1 = new Bracket();
+
+		for(String name : names) {
+			User nu = new User();
+			nu.setUserName(name);
+			nu.setDisplayName(name);
+			startBracket.Add(nu);
+			System.out.println("name is : " + name);
+		}		
+		startBracket.Randomize();
+		startBracket.InsertByes();
+
+		rounds.add(startBracket);
+	}
+	public int getCurrentRoundIndex() {
+		return currentRoundIndex;
+	}
+
+	public void setCurrentRoundIndex(int currentRoundIndex) {
+		this.currentRoundIndex = currentRoundIndex;
+	}
+
+	public void runRound() {
+		// create WwinnerBracket
+		Bracket winnerBracket = new Bracket();
+		int bracketSize = rounds.get(currentRoundIndex).BracketList.size();
+		if(bracketSize == 2) {
+			// run special bracket to determine first, second place
+		}
+
+		System.out.println("while: currentContestIndex="+rounds.get(currentRoundIndex).currentContestIndex + " bracketSize="+bracketSize);
+		while(rounds.get(currentRoundIndex).currentContestIndex < bracketSize) {
+			User player1 = rounds.get(currentRoundIndex).getNextUser();  
+			User player2 = rounds.get(currentRoundIndex).getNextUser();
+			User loser1 = null;  
+			User loser2 = null;
+			System.out.println();
+			System.out.println(player1.getDisplayName() + " vs " + player2.getDisplayName());
+			// query Bracket for first name.
+			// player1 = getName();
+			// player2 = getName();
+			User winner = ContestWinner(player1, player2);
+
+			if (bracketSize == 4) {
+				// determine 3rd place with losers
+				if (loser1 == null||loser2 == null){
+					if(loser1 == null){
+						if(winner == player1){
+							loser1 = player2;
+						}
+						else{
+							loser1 = player1;
+						}
+					}
+					{
+						third = ContestWinner(loser1, loser2);
+					}
+				}
+
+			}
+			else {
+				if (bracketSize == 2) {
+					//save winner as 1st, loser as 2nd.
+					if(player1 == winner){
+						loser1 = player2;
+					}
+					else{
+						loser1 = player1;
+					}
+					first = ContestWinner(player1, player2);
+					second = ContestWinner(loser1, loser2);
+				}
+			}
+			winnerBracket.Add(winner);
+		}
+		rounds.add(winnerBracket);
+		currentRoundIndex++;
+	}		
+
+	public User getName() {
+
+		return null;
+	}
+
+	private User ContestWinner(User player1, User player2) {
+		return player1;
+		// print both players displayNames
+		// take user input to who won
+		/*
+		Console console = System.console();
+		String winner = console.readLine("Input winner: 1 or 2;");
+		if (winner == "1" ){
+			return player1;}
+		else;
+			return player2;
+		 */
+	} 
+	public static void main(String[] args) {
+		Tourney mainTourney = new Tourney();
+		mainTourney.run();
+		System.out.println();
+		System.out.println("First: " + mainTourney.first.getDisplayName());
+		System.out.println();
+		System.out.println("Second: " + mainTourney.second.getDisplayName());
+		System.out.println();
+		System.out.println("Third: " + mainTourney.third.getDisplayName());
+	}
+}
+
