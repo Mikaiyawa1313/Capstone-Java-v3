@@ -9,22 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-/**
- * Servlet implementation class TourneyBracketFirstRound
- */
 @WebServlet("/FirstRound")
 public class FirstRound extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     public FirstRound() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
 		doPost(request, response);
 	}
@@ -32,6 +25,9 @@ public class FirstRound extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//write new servlet for in progress tourney(s) and sub in the name
+		
+		Tourney mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");	
+		
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/TBInputUserForm.jsp");
         if (dispatcher != null) {
               dispatcher.forward(request, response);
