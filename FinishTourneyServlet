@@ -1,0 +1,64 @@
+package tbV5;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/FinishTourneyServlet")
+public class FinishTourneyServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public FinishTourneyServlet() {
+        super();
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Tourney mainTourney;
+		mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");
+		
+		String firstPlace;
+		String secondPlace;
+		String thirdPlace;
+		
+		if(mainTourney.getFirst() != null) {
+			firstPlace = mainTourney.getFirst().getDisplayName();
+		}
+		else {
+			firstPlace = "--none--";
+		}
+		if(mainTourney.getSecond() != null) {
+			secondPlace = mainTourney.getSecond().getDisplayName();
+		}
+		else {
+			secondPlace = "--none--";
+		}
+		if(mainTourney.getThird() != null) {
+			thirdPlace = mainTourney.getThird().getDisplayName();
+		}
+		else {
+			thirdPlace = "--none--";
+		}
+		
+		request.setAttribute("firstPlace", firstPlace);
+		request.setAttribute("secondPlace", secondPlace);
+		request.setAttribute("thirdPlace", thirdPlace);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/FinishTourney.jsp");
+		if (dispatcher != null) {
+			dispatcher.forward(request, response);
+		}
+		//request.getSession().setAttribute("mainTourney", mainTourney);
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
+}
