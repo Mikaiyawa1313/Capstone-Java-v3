@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>TOURNAMENT: ${tourneyName}</title>
+<link rel="stylesheet" type="text/css" href="/TBV5/tournament.css">
+</head>
+<body>
+<div class="topTitle">
+<h1>TOURNAMENT: ${tourneyName}</h1>
+</div>
+<div class="mainPage">
+<h2>TOURNEY COMPLETE</h2>
+<h3>1st: ${firstPlace}</h3>
+<h3>2nd: ${secondPlace}</h3>
+<h3>3rd: ${thirdPlace}</h3>
+</div>
+<br>
+<script type="text/javascript"> 
+//var teams = ["Aa", "--Bye--", "Bb", "--Bye--", "Cc", "Dd", "Ee", "Ff"];
+//var winners = ["Aa", "Bb"];
+var teams = ${teams};
+var winners = ${winTeams};
+
+function drawTable(tbody) {
+	var tr, td;
+	var winnerIndex = 0;
+	tbody = document.getElementById(tbody);
+	for (var i=0; i < teams.length; i++) {
+		tr = tbody.insertRow(tbody.rows.length);
+		td = tr.insertCell(tr.cells.length);
+		td.setAttribute("class", "bracketTeams");
+		td.innerHTML = teams[i];
+		td = tr.insertCell(tr.cells.length);
+		td.innerHTML = "";
+		
+		tr = tbody.insertRow(tbody.rows.length);
+		td = tr.insertCell(tr.cells.length);
+		if (i%2 == 0) {
+			td.setAttribute("class","bracketVS");
+			td.innerHTML = "-vs-";
+			td = tr.insertCell(tr.cells.length);
+			if (winnerIndex < winners.length) {
+				td.setAttribute("class", "bracketWinners");
+				td.innerHTML = winners[winnerIndex];
+				winnerIndex++;
+			} else {
+				td.setAttribute("class", "bracketWinnerBlank");
+				td.innerHTML = "";
+			}
+		}
+		else {
+			td.innerHTML = "";
+			td = tr.insertCell(tr.cells.length);
+			tr.setAttribute("class", "bracketBlank");
+			td.innerHTML = "";		
+			}
+		
+	}
+}
+drawTable("bracketData");
+</script>
+<br>
+</body>
+</html>
