@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>TOURNAMENT: Test Six</title>
+<link rel="stylesheet" type="text/css" href="/TBV5/tournament.css">
+</head>
+<body>
+<div class="leftSide">
+<br>
+Round: 1/5<br>
+<br>
+<table id="bracket">
+<tbody id="bracketData"></tbody>
+</table>
+</div>
+
+<div class="topTitle">
+<h1>TOURNAMENT: Test Six</h1>
+</div>
+
+<div class="mainPage">
+<br><br>
+<form action="GetContestServlet" method="post" id="form1">
+   <input type="hidden" name="moreFights" value="yes"/>
+   <input type="hidden" name="player1" value="Qq">
+   <input type="hidden" name="player2" value="Yy">
+   
+   <button type="submit" form="form1" value="winner1" name="winner1">Qq</button> <br>
+   -VS-<br>
+   <button type="submit" form="form1" value="winner2" name="winner2">Yy</button> <br>
+</form>
+
+</div>
+
+<script type="text/javascript"> 
+//var teams = ["Aa", "--Bye--", "Bb", "--Bye--", "Cc", "Dd", "Ee", "Ff"];
+//var winners = ["Aa", "Bb"];
+var teams = ["Kk","--Bye--","Nn","--Bye--","Mm","--Bye--","Jj","--Bye--","Ee","--Bye--","Cc","--Bye--","Bb","--Bye--","Ss","--Bye--","Vv","--Bye--","Zz","--Bye--","Uu","--Bye--","Ww","--Bye--","Qq","Yy","Ff","Aa","Ii","Oo","Rr","Gg"];
+var winners = ["Kk","Nn","Mm","Jj","Ee","Cc","Bb","Ss","Vv","Zz","Uu","Ww"];
+
+function drawTable(tbody) {
+	var tr, td;
+	var winnerIndex = 0;
+	tbody = document.getElementById(tbody);
+	for (var i=0; i < teams.length; i++) {
+		tr = tbody.insertRow(tbody.rows.length);
+		td = tr.insertCell(tr.cells.length);
+		td.setAttribute("class", "bracketTeams");
+		td.innerHTML = teams[i];
+		td = tr.insertCell(tr.cells.length);
+		td.innerHTML = "";
+		
+		tr = tbody.insertRow(tbody.rows.length);
+		td = tr.insertCell(tr.cells.length);
+		if (i%2 == 0) {
+			td.setAttribute("class","bracketVS");
+			td.innerHTML = "-vs-";
+			td = tr.insertCell(tr.cells.length);
+			if (winnerIndex < winners.length) {
+				td.setAttribute("class", "bracketWinners");
+				td.innerHTML = winners[winnerIndex];
+				winnerIndex++;
+			} else {
+				td.setAttribute("class", "bracketWinnerBlank");
+				td.innerHTML = "";
+			}
+		}
+		else {
+			td.innerHTML = "";
+			td = tr.insertCell(tr.cells.length);
+			tr.setAttribute("class", "bracketBlank");
+			td.innerHTML = "";		
+			}
+		
+	}
+}
+drawTable("bracketData");
+</script>
+
+</body>
+</html>
