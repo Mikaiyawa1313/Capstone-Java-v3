@@ -1,0 +1,216 @@
+package tbV5;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/GetContestServlet")
+public class GetContestServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+
+    public GetContestServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Tourney mainTourney;
+		mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");
+		
+		boolean continueFights = false;
+		
+		boolean byeRound = true;
+		while(byeRound) {
+			continueFights = mainTourney.getContest();
+			if(mainTourney.currentContest.getPlayer2().getDisplayName().equalsIgnoreCase("--Bye--")) {
+				byeRound = true;
+				mainTourney.setWinner(mainTourney.currentContest.getPlayer1());
+			}
+			else {
+				byeRound = false;
+			}
+		}
+		
+		String moreFights;
+		if(continueFights) {
+			moreFights = "yes";
+		}
+		else {
+			moreFights = "no";
+		}
+		
+		request.getSession().setAttribute("mainTourney", mainTourney);
+		
+		String player1 = mainTourney.currentContest.getPlayer1().getDisplayName();
+		String player2 = mainTourney.currentContest.getPlayer2().getDisplayName();
+
+		int winners = mainTourney.winnerBracket.BracketList.size();	
+		int maxPlayers = mainTourney.rounds.get(mainTourney.getCurrentRoundIndex()).BracketList.size();
+		
+		int currentRound = mainTourney.currentRoundIndex + 1;
+		int maxRounds = mainTourney.maxRounds;
+
+		String specialRound = "";
+		if (maxPlayers == 4) {
+			specialRound = "Quarter Finals";
+		}
+		if (maxPlayers == 2) {
+			specialRound = "Finals";
+		}
+		
+		String teams = "[";
+		String comma="";
+		for(User u : mainTourney.rounds.get(mainTourney.currentRoundIndex).BracketList) {
+			teams += comma;
+			teams += "\"" + u.getDisplayName() + "\"";
+			comma = ",";
+		}
+		teams += "]";
+		
+		String winTeams = "[";
+		comma="";
+		for(User u : mainTourney.winnerBracket.BracketList) {
+			winTeams += comma;
+			winTeams += "\"" + u.getDisplayName() + "\"";
+			comma = ",";
+		}
+		winTeams += "]";
+		
+		request.setAttribute("currentRound", currentRound);
+		request.setAttribute("maxRounds", maxRounds);
+		request.setAttribute("specialRound", specialRound);
+		request.setAttribute("player1", player1);
+		request.setAttribute("player2", player2);
+		request.setAttribute("moreFights", moreFights);
+		request.setAttribute("tourneyName", mainTourney.getTourneyName());
+		request.setAttribute("teams", teams);
+		request.setAttribute("winTeams", winTeams);
+		
+
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/WinnerSelectForm.jsp");
+		if (dispatcher != null) {
+			dispatcher.forward(request, response);
+
+		}
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Tourney mainTourney;
+		mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");
+		int maxPlayers = mainTourney.rounds.get(mainTourney.getCurrentRoundIndex()).BracketList.size();
+		
+		String winner = "no winner";
+		String loser = "no loser";
+		
+		String winner1 = request.getParameter("winner1");
+		String winner2 = request.getParameter("winner2");
+		
+		if (winner1 != null){
+		       winner = request.getParameter("player1");
+		       loser = request.getParameter("player2");
+		}
+		else if (winner2 != null){
+		       winner = request.getParameter("player2");
+		       loser = request.getParameter("player1");
+		}
+		
+		String moreFights = request.getParameter("moreFights");
+       
+		if(moreFights.equalsIgnoreCase("third")) {
+			mainTourney.setThird(winner);
+		}
+		else {
+			mainTourney.setWinner(winner);
+		}
+		
+		if(maxPlayers == 4 && !moreFights.equalsIgnoreCase("third")) {
+			User loser1 = mainTourney.getLoser1();
+			User loser2 = mainTourney.getLoser2();
+						
+			if (loser1 == null) {
+				mainTourney.setLoser1(loser);
+			}
+			else if (loser2 == null) {
+				mainTourney.setLoser2(loser);
+			}
+			
+			loser1 = mainTourney.getLoser1();
+			loser2 = mainTourney.getLoser2();
+			
+			if(loser1 != null && loser2 != null){
+				
+				mainTourney.clearLosers();
+				
+				String player1 = loser1.getDisplayName();
+				String player2 = loser2.getDisplayName();
+
+				mainTourney.setContest(loser1, loser2);
+
+				int winners = mainTourney.winnerBracket.BracketList.size();	
+				
+				int currentRound = mainTourney.currentRoundIndex + 1;
+				int maxRounds = mainTourney.maxRounds;
+				
+				String teams = "[";
+				String comma="";
+				for(User u : mainTourney.rounds.get(mainTourney.currentRoundIndex).BracketList) {
+					teams += comma;
+					teams += "\"" + u.getDisplayName() + "\"";
+					comma = ",";
+				}
+				teams += "]";
+				
+				String winTeams = "[";
+				comma="";
+				for(User u : mainTourney.winnerBracket.BracketList) {
+					winTeams += comma;
+					winTeams += "\"" + u.getDisplayName() + "\"";
+					comma = ",";
+				}
+				winTeams += "]";
+				
+				request.setAttribute("currentRound", currentRound);
+				request.setAttribute("maxRounds", maxRounds);
+				String moreFights2 = "Third";
+				request.setAttribute("specialRound", moreFights2);
+				request.setAttribute("player1", player1);
+				request.setAttribute("player2", player2);
+				request.setAttribute("moreFights", moreFights2);
+				request.setAttribute("tourneyName", mainTourney.getTourneyName());
+				request.setAttribute("teams", teams);
+				request.setAttribute("winTeams", winTeams);
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/WinnerSelectForm.jsp");
+				if (dispatcher != null) {
+					dispatcher.forward(request, response);
+	
+				}
+			}
+		}
+		
+		if(maxPlayers == 2) {
+			mainTourney.setFirst(winner);
+			mainTourney.setSecond(loser);
+		}
+		
+		
+		request.getSession().setAttribute("mainTourney", mainTourney);
+		
+		if(moreFights.equalsIgnoreCase("yes")) {
+			response.sendRedirect("/TBV5/GetContestServlet");
+		}
+		else {
+			response.sendRedirect("/TBV5/FinishRoundServlet");
+		}
+	}
+
+}
