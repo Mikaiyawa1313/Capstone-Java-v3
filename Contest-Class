@@ -1,0 +1,20 @@
+package tbV5;
+
+public class Contest {
+	User player1;
+	User player2;
+	
+	public void setPlayer1(User player) {
+		player1 = player;
+	}
+	public User getPlayer1() {
+		return player1;
+	}
+	
+	public void setPlayer2(User player) {
+		player2 = player;
+	}
+	public User getPlayer2() {
+		return player2;
+	}
+}
