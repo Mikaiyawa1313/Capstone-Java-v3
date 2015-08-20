@@ -1,0 +1,40 @@
+package tbV5;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/FinishRoundServlet")
+public class FinishRoundServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public FinishRoundServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Tourney mainTourney;
+		mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");
+
+		boolean finished = mainTourney.finishRound();
+		
+		request.getSession().setAttribute("mainTourney", mainTourney);
+		
+		if(finished) {
+			response.sendRedirect("/TBV5/FinishTourneyServlet");
+		}
+		else {
+			response.sendRedirect("/TBV5/StartRoundServlet");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+	}
+
+}
