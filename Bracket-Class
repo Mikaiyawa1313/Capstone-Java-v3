@@ -1,0 +1,132 @@
+package tbV5;
+
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+
+public class Bracket {
+
+	public Bracket(){
+		BracketList = new ArrayList<User>();
+	}
+
+	
+	public int ContestsRemaining() {
+		return ((BracketList.size()-currentContestIndex) / 2);
+	}
+	
+	public ArrayList<User> BracketList;
+	
+	public ArrayList<User> getBracketList() {
+		return BracketList;
+	}
+
+	public void setBracketList(ArrayList<User> bracketList) {
+		BracketList = bracketList;
+	}
+
+	int currentContestIndex = 0;
+	
+	public int getCurrentContestIndex() {
+		return currentContestIndex;
+	}
+
+	public void setCurrentContestIndex(int currentContestIndex) {
+		this.currentContestIndex = currentContestIndex;
+	}
+
+	public void Add(User newUser) {
+		BracketList.add(newUser);
+	}
+
+	public void PrintContests() {
+		currentContestIndex = 0;
+	    int maxIndex = BracketList.size();
+	    while(currentContestIndex < maxIndex) {
+	    	System.out.println(getContest());
+	    }
+	}
+	
+	public User getNextUser() {
+		User returnUser = BracketList.get(currentContestIndex);
+		currentContestIndex++;
+		return returnUser;
+	}
+	
+
+ 	public String getContest() {
+		String contest = BracketList.get(currentContestIndex).getDisplayName() 
+				+ " vs " 
+				+ BracketList.get(currentContestIndex+1).getDisplayName();
+		currentContestIndex += 2;
+		return contest;
+	}
+
+	public void PrintBracketList() {
+		int index = 0;
+		for(User u : BracketList) {
+			System.out.println(index + " " + u.getDisplayName());
+			index++;
+		}
+	}
+
+	public int CalculateByes(){
+		int currentSize= BracketList.size();
+		int fullBracket = 2;
+		while(currentSize>fullBracket){
+			fullBracket*=2;
+		}
+		return (fullBracket-currentSize);
+	}
+
+	public int InsertByes() {
+		int numberToAdd = CalculateByes();
+		int insertIndex = 1;
+
+		for(int i=0; i < numberToAdd; i++) {
+			User u = new User();
+			u.setUserName("");
+			u.setDisplayName("--Bye--");
+			BracketList.add(insertIndex, u);
+			insertIndex += 2;
+		}
+		return insertIndex;
+	}
+
+	public void Randomize() {
+		Collections.shuffle(BracketList);
+	}
+/*	testing code
+	public static void main(String[] args) {
+		String[] Names = {"Aa","Bb","Cc","Dd","Ee","Ff","Gg","Hh","Ii",
+				"Jj","Kk","Ll","Mm","Nn","Oo","Pp","Qq","Rr","Ss","Tt",
+				"Uu","Vv","Ww","Xx","Yy","Zz"};
+		Integer numberOfNames = 13;
+
+		Bracket Round1 = new Bracket();
+
+		for(int i=0; i < numberOfNames; i++) {
+			User nu = new User();
+			nu.setUserName(Names[i]);
+			nu.setDisplayName(Names[i]);
+			Round1.Add(nu);
+		}
+
+		System.out.println("Bracket Generation:");
+		System.out.println("Number of People: " + numberOfNames);
+		System.out.println();
+		System.out.println("Original Bracket -------------------------------");
+		Round1.PrintBracketList();
+		System.out.println();
+		System.out.println("Randomized Bracket -----------------------------");
+		Round1.Randomize(numberOfNames);
+		Round1.InsertByes();
+		Round1.PrintBracketList();
+		System.out.println();
+		System.out.println("Pairings -------------------------------");
+		Round1.PrintContests();
+	}*/
+
+}
