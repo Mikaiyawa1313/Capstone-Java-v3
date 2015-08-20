@@ -1,0 +1,71 @@
+html, body {
+	height: 100%;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+.leftSide {
+	float: left;
+	Width: 200px;
+	background-color: #D0D0D0;
+	text-align: center;
+	border-right-style: inset;
+	border-right-width: 15 pix;
+	border-right-color: #097509;
+}
+
+.topTitle {
+	
+	padding-top: 20px;
+	text-align: center;
+	height: 100px;
+	background-color: #D0D0D0;
+	border-bottom-style: inset;
+	border-bottom-width: 15 pix;
+	border-bottom-color: #097509;
+}
+
+
+.mainPage {
+	float: top;
+	background-color: D0D0D0;
+	text-align: center;
+	border-top-style: inset;
+	border-top-width: 15 pix;
+	border-top-color: #097509;
+}
+
+.bracketTeams {
+	text-align: center;
+	margin:0px;
+	width:75px;
+	border-right-style:solid; 
+	border-bottom-style:solid; 
+	background-color:LightSteelBlue;
+}
+
+.bracketWinners {
+	text-align: center;
+	margin:0px; 
+	width:75px; 
+	border-bottom-style:solid; 
+	background-color:LightGreen;
+}
+
+.bracketWinnerBlank {
+	margin:0px; 
+	height:20px;
+	background-color:LightGreen;
+}
+
+.bracketVS {
+	text-align:center;
+	margin:0px; 
+	height:20px; 
+	border-right-style:solid;
+}
+
+.bracketBlank {
+	margin:0px; 
+	height:20px
+}
