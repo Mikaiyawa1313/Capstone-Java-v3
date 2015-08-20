@@ -1,0 +1,61 @@
+package tbV5;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/StartRoundServlet")
+public class StartRoundServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public StartRoundServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		Tourney mainTourney;
+		mainTourney = (Tourney) request.getSession().getAttribute("mainTourney");
+		mainTourney.startRound();
+		request.getSession().setAttribute("mainTourney", mainTourney);
+		response.sendRedirect("/TBV5/GetContestServlet");
+		/*
+		int maxPlayers = mainTourney.rounds.get(mainTourney.getCurrentRoundIndex()).BracketList.size();
+		
+		int currentRound = mainTourney.currentRoundIndex + 1;
+		int maxRounds = mainTourney.maxRounds;
+
+		String specialRound = "";
+		if (maxPlayers == 4) {
+			specialRound = "Quarter Finals";
+		}
+		if (maxPlayers == 2) {
+			specialRound = "Finals";
+		}
+		
+		request.setAttribute("currentRound", currentRound);
+		request.setAttribute("maxRounds", maxRounds);
+		request.setAttribute("maxPlayers", maxPlayers);
+		request.setAttribute("specialRound", specialRound);
+
+		
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/currentRoundDisplay.jsp");
+		if (dispatcher != null) {
+			dispatcher.forward(request, response);
+
+		}
+		*/
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
+}
